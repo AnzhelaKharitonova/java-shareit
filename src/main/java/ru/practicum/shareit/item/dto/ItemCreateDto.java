@@ -13,8 +13,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ItemCreateDto {
 
-    private Long id;
-
     @NotBlank(message = "Название не может быть пустым")
     private String name;
 
@@ -24,5 +22,4 @@ public class ItemCreateDto {
     @NotNull(message = "Статус доступности должен быть указан")
     private Boolean available;
 
-    private Long request;
 }

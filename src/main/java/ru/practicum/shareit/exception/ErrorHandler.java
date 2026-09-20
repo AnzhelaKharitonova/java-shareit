@@ -61,6 +61,24 @@ public class ErrorHandler {
         );
     }
 
+    @ExceptionHandler(NotAvailableException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleNotAvailableException(NotAvailableException e) {
+        return new ErrorResponse(
+                "Нарушение прав доступа",
+                List.of(e.getMessage())
+        );
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBadRequestException(BadRequestException e) {
+        return new ErrorResponse(
+                "Ошибка в запросе",
+                List.of(e.getMessage())
+        );
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleException(Exception e) {

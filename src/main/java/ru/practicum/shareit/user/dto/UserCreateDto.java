@@ -13,8 +13,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserCreateDto {
 
-    private Long id;
-
     @NotBlank(message = "Имя не может быть пустым")
     private String name;
 

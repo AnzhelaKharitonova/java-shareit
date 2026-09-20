@@ -23,7 +23,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "bookings")
-@Getter @Setter @ToString
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Booking {

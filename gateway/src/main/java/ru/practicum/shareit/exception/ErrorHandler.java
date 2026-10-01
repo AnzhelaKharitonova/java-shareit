@@ -19,12 +19,6 @@ import java.util.List;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler(ValidationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidationException(ValidationException e) {
-        return new ErrorResponse("Ошибка валидации данных", List.of(e.getMessage()));
-    }
-
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleConstraintViolationException(ConstraintViolationException e) {
@@ -76,21 +70,12 @@ public class ErrorHandler {
         );
     }
 
-    @ExceptionHandler(BadRequestException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleBadRequestException(BadRequestException e) {
-        return new ErrorResponse(
-                "Ошибка в запросе",
-                List.of(e.getMessage())
-        );
-    }
-
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleException(Exception e) {
         log.error("Непредвиденная ошибка сервера: ", e);
         return new ErrorResponse("Ошибка сервера",
-                List.of("Внутренняя ошибка сервера. Пожалуйста попробуйте позже", e.getMessage()));
+                List.of("Внутренняя ошибка сервера. Пожалуйста попробуйте позже"));
     }
 
 }

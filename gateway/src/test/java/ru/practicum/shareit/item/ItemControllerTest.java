@@ -138,4 +138,41 @@ class ItemControllerTest {
                         .content(objectMapper.writeValueAsString(validComment)))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void updateItem_WhenValid_ReturnsOk() throws Exception {
+        // Предполагаем, что у вас есть ItemUpdateDto со схожей структурой
+        ru.practicum.shareit.item.dto.ItemUpdateDto updateDto = ru.practicum.shareit.item.dto.ItemUpdateDto.builder()
+                .name("Новое имя")
+                .description("Новое описание")
+                .build();
+
+        when(itemClient.updateItem(anyLong(), anyLong(), any(ru.practicum.shareit.item.dto.ItemUpdateDto.class)))
+                .thenReturn(new ResponseEntity<>(HttpStatus.OK));
+
+        mockMvc.perform(patch("/items/{itemId}", 1L)
+                        .header(USER_ID_HEADER, 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDto)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findItemById_WhenValid_ReturnsOk() throws Exception {
+        when(itemClient.findItemById(anyLong()))
+                .thenReturn(new ResponseEntity<>(HttpStatus.OK));
+
+        mockMvc.perform(get("/items/{itemId}", 1L))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findItemsByOwner_WhenValid_ReturnsOk() throws Exception {
+        when(itemClient.findItemsByOwner(anyLong()))
+                .thenReturn(new ResponseEntity<>(HttpStatus.OK));
+
+        mockMvc.perform(get("/items")
+                        .header(USER_ID_HEADER, 1L))
+                .andExpect(status().isOk());
+    }
 }

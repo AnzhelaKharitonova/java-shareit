@@ -62,7 +62,7 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>1.5.5.Final</version> <!-- Укажите версию, которая была в исходном проекте -->
+            <version>1.5.5.Final</version>
         </dependency>
 	</dependencies>
 

@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BookingController.class)
-class BookingControllerGatewayTest {
+class BookingControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -35,7 +35,6 @@ class BookingControllerGatewayTest {
 
     @Test
     void createBooking_WhenValid_ReturnsOk() throws Exception {
-        // Given: корректные даты в будущем
         BookingCreateDto validDto = BookingCreateDto.builder()
                 .itemId(1L)
                 .start(LocalDateTime.now().plusDays(1))
@@ -45,7 +44,6 @@ class BookingControllerGatewayTest {
         when(bookingClient.createBooking(anyLong(), any(BookingCreateDto.class)))
                 .thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
-        // When & Then
         mockMvc.perform(post("/bookings")
                         .header(USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -99,7 +97,6 @@ class BookingControllerGatewayTest {
 
     @Test
     void findBookingsByUser_WhenUnknownState_ReturnsBadRequest() throws Exception {
-        // When & Then: передаем некорректный stateParam, вызывающий IllegalArgumentException
         mockMvc.perform(get("/bookings")
                         .header(USER_ID_HEADER, 1L)
                         .param("state", "UNSUPPORTED_STATE"))

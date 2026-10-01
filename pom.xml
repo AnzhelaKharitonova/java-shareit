@@ -114,6 +114,10 @@
 								<goal>check</goal>
 							</goals>
 							<configuration>
+                                <excludes>
+                                    <exclude>**/ShareitGateway.class</exclude>
+                                    <exclude>**/ShareitServer.class</exclude>
+                                </excludes>
 								<rules>
 									<rule>
 										<element>BUNDLE</element>

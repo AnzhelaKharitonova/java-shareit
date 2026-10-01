@@ -115,8 +115,8 @@
 							</goals>
 							<configuration>
                                 <excludes>
-                                    <exclude>**/ShareitGateway.class</exclude>
-                                    <exclude>**/ShareitServer.class</exclude>
+                                    <exclude>**/ShareitGateway**</exclude>
+                                    <exclude>**/ShareitServer**</exclude>
                                 </excludes>
 								<rules>
 									<rule>

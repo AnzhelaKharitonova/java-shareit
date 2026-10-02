@@ -1,0 +1,61 @@
+package ru.practicum.shareit.exception;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.List;
+
+@Slf4j
+@RestControllerAdvice
+public class ErrorHandler {
+
+    @ExceptionHandler(ValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleValidationException(ValidationException e) {
+        return new ErrorResponse("Ошибка валидации данных", List.of(e.getMessage()));
+    }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
+        return new ErrorResponse("Email занят", List.of(e.getMessage()));
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNotFoundException(NotFoundException e) {
+        return new ErrorResponse("Ресурс не найден", List.of(e.getMessage()));
+    }
+
+
+    @ExceptionHandler(NotAvailableException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleNotAvailableException(NotAvailableException e) {
+        return new ErrorResponse(
+                "Нарушение прав доступа",
+                List.of(e.getMessage())
+        );
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBadRequestException(BadRequestException e) {
+        return new ErrorResponse(
+                "Ошибка в запросе",
+                List.of(e.getMessage())
+        );
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleException(Exception e) {
+        log.error("Непредвиденная ошибка сервера: ", e);
+        return new ErrorResponse("Ошибка сервера",
+                List.of("Внутренняя ошибка сервера. Пожалуйста попробуйте позже", e.getMessage()));
+    }
+
+}
+

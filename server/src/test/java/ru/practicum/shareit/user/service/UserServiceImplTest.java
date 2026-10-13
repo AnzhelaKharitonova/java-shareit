@@ -67,7 +67,6 @@ class UserServiceImplTest {
 
     @Test
     void findAllUsers_ShouldReturnCollectionWithPagination() {
-        // Given
         Page<User> userPage = new PageImpl<>(List.of(user));
         when(userRepository.findAll(any(Pageable.class))).thenReturn(userPage);
         when(userMapper.toUserResponseDtoCollection(anyList())).thenReturn(List.of(responseDto));
@@ -80,7 +79,6 @@ class UserServiceImplTest {
 
     @Test
     void findUserById_WhenUserExists_ShouldReturnUser() {
-        // Given
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(userMapper.toUserResponseDto(user)).thenReturn(responseDto);
 

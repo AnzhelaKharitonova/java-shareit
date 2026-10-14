@@ -12,6 +12,7 @@ import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.util.Constants;
 
 import java.util.List;
 
@@ -34,11 +35,8 @@ class ItemControllerTest {
     @MockBean
     private ItemService itemService;
 
-    private static final String USER_ID_HEADER = "X-Sharer-User-Id";
-
     @Test
     void createItem_ShouldReturnItemAndStatus200() throws Exception {
-        // Given
         ItemCreateDto createDto = ItemCreateDto.builder()
                 .name("Дрель")
                 .description("Дрель Bosch")
@@ -53,9 +51,8 @@ class ItemControllerTest {
         when(itemService.createItem(any(ItemCreateDto.class), eq(1L)))
                 .thenReturn(responseDto);
 
-        // When & Then
         mockMvc.perform(post("/items")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createDto)))
                 .andExpect(status().isOk())
@@ -67,7 +64,6 @@ class ItemControllerTest {
 
     @Test
     void updateItem_ShouldReturnUpdatedItem() throws Exception {
-        // Given
         ItemUpdateDto updateDto = ItemUpdateDto.builder()
                 .name("Дрель+")
                 .build();
@@ -81,7 +77,7 @@ class ItemControllerTest {
                 .thenReturn(responseDto);
 
         mockMvc.perform(patch("/items/10")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateDto)))
                 .andExpect(status().isOk())
@@ -113,7 +109,7 @@ class ItemControllerTest {
         when(itemService.findItemsByOwner(1L)).thenReturn(List.of(responseDto));
 
         mockMvc.perform(get("/items")
-                        .header(USER_ID_HEADER, 1L))
+                        .header(Constants.USER_ID_HEADER, 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("Пила"));
@@ -144,7 +140,7 @@ class ItemControllerTest {
                 .thenReturn(responseComment);
 
         mockMvc.perform(post("/items/5/comment")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentDto)))
                 .andExpect(status().isOk())

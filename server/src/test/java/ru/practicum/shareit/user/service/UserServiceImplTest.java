@@ -98,7 +98,6 @@ class UserServiceImplTest {
 
     @Test
     void createUser_WhenEmailIsUnique_ShouldSaveUser() {
-        // Given
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(userMapper.toUserFromCreateDto(createDto)).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);

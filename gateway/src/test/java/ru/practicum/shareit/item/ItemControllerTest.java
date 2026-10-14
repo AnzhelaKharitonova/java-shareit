@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
+import ru.practicum.shareit.util.Constants;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -31,8 +32,6 @@ class ItemControllerTest {
     @MockBean
     private ItemClient itemClient;
 
-    private static final String USER_ID_HEADER = "X-Sharer-User-Id";
-
     @Test
     void createItem_WhenValid_ReturnsOk() throws Exception {
         ItemCreateDto validDto = ItemCreateDto.builder()
@@ -45,7 +44,7 @@ class ItemControllerTest {
                 .thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
         mockMvc.perform(post("/items")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validDto)))
                 .andExpect(status().isOk());
@@ -60,7 +59,7 @@ class ItemControllerTest {
                 .build();
 
         mockMvc.perform(post("/items")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest());
@@ -77,7 +76,7 @@ class ItemControllerTest {
                 .build();
 
         mockMvc.perform(post("/items")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest());
@@ -115,7 +114,7 @@ class ItemControllerTest {
                 .build();
 
         mockMvc.perform(post("/items/1/comment")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidComment)))
                 .andExpect(status().isBadRequest());
@@ -133,7 +132,7 @@ class ItemControllerTest {
                 .thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
         mockMvc.perform(post("/items/1/comment")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validComment)))
                 .andExpect(status().isOk());
@@ -151,7 +150,7 @@ class ItemControllerTest {
                 .thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
         mockMvc.perform(patch("/items/{itemId}", 1L)
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateDto)))
                 .andExpect(status().isOk());
@@ -172,7 +171,7 @@ class ItemControllerTest {
                 .thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
         mockMvc.perform(get("/items")
-                        .header(USER_ID_HEADER, 1L))
+                        .header(Constants.USER_ID_HEADER, 1L))
                 .andExpect(status().isOk());
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.client.MockRestServiceServer;
 import ru.practicum.shareit.request.dto.RequestCreateDto;
+import ru.practicum.shareit.util.Constants;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
@@ -44,9 +45,11 @@ class RequestClientTest {
 
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/requests")))
                 .andExpect(method(HttpMethod.POST))
-                .andExpect(header("X-Sharer-User-Id", "1"))
+                .andExpect(header(Constants.USER_ID_HEADER, "1"))
                 .andExpect(content().json(jsonBody))
-                .andRespond(withStatus(HttpStatus.CREATED).body("{\"id\":1,\"description\":\"Нужна щетка для обуви\"}").contentType(MediaType.APPLICATION_JSON));
+                .andRespond(withStatus(HttpStatus.CREATED)
+                        .body("{\"id\":1,\"description\":\"Нужна щетка для обуви\"}")
+                        .contentType(MediaType.APPLICATION_JSON));
 
         ResponseEntity<Object> response = requestClient.createRequest(1L, createDto);
 
@@ -58,7 +61,7 @@ class RequestClientTest {
     void findRequestsByUser_shouldSendGetRequest_toRootPath() {
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/requests")))
                 .andExpect(method(HttpMethod.GET))
-                .andExpect(header("X-Sharer-User-Id", "2"))
+                .andExpect(header(Constants.USER_ID_HEADER, "2"))
                 .andRespond(withSuccess("[]", MediaType.APPLICATION_JSON));
 
         ResponseEntity<Object> response = requestClient.findRequestsByUser(2L);
@@ -71,7 +74,7 @@ class RequestClientTest {
     void findAllRequests_shouldSendGetRequest_withPaginationParams() {
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/requests/all?from=0&size=20")))
                 .andExpect(method(HttpMethod.GET))
-                .andExpect(header("X-Sharer-User-Id", "3"))
+                .andExpect(header(Constants.USER_ID_HEADER, "3"))
                 .andRespond(withSuccess("[]", MediaType.APPLICATION_JSON));
 
         ResponseEntity<Object> response = requestClient.findAllRequests(3L, 0, 20);
@@ -84,7 +87,7 @@ class RequestClientTest {
     void findRequestById_shouldSendGetRequest_withRequestIdInPath() {
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/requests/10")))
                 .andExpect(method(HttpMethod.GET))
-                .andExpect(header("X-Sharer-User-Id", "4"))
+                .andExpect(header(Constants.USER_ID_HEADER, "4"))
                 .andRespond(withSuccess("{\"id\":10}", MediaType.APPLICATION_JSON));
 
         ResponseEntity<Object> response = requestClient.findRequestById(4L, 10L);

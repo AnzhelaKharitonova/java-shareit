@@ -33,19 +33,16 @@ class CommentRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        // Создаем и сохраняем автора комментария (пользователя)
         author = new User();
         author.setName("Комментатор");
         author.setEmail("commentator@mail.com");
         em.persist(author);
 
-        // Создаем владельца для вещей
         User owner = new User();
         owner.setName("Владелец");
         owner.setEmail("owner@mail.com");
         em.persist(owner);
 
-        // Создаем и сохраняем две разные вещи
         item1 = new Item();
         item1.setName("Дрель");
         item1.setDescription("Ударная");
@@ -60,7 +57,6 @@ class CommentRepositoryTest {
         item2.setOwner(owner);
         em.persist(item2);
 
-        // Создаем и сохраняем комментарий к первой вещи
         comment1 = new Comment();
         comment1.setText("Отличная дрель, все понравилось!");
         comment1.setItem(item1);
@@ -68,7 +64,6 @@ class CommentRepositoryTest {
         comment1.setCreated(LocalDateTime.now());
         em.persist(comment1);
 
-        // Создаем и сохраняем комментарий ко второй вещи
         comment2 = new Comment();
         comment2.setText("Палатка промокает под сильным дождем");
         comment2.setItem(item2);

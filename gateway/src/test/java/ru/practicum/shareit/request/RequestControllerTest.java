@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.request.dto.RequestCreateDto;
+import ru.practicum.shareit.util.Constants;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -30,8 +31,6 @@ class RequestControllerTest {
     @MockBean
     private RequestClient requestClient;
 
-    private static final String USER_ID_HEADER = "X-Sharer-User-Id";
-
     @Test
     void createRequest_WhenValid_ReturnsOk() throws Exception {
         RequestCreateDto validDto = RequestCreateDto.builder()
@@ -42,7 +41,7 @@ class RequestControllerTest {
                 .thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
         mockMvc.perform(post("/requests")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validDto)))
                 .andExpect(status().isOk());
@@ -55,7 +54,7 @@ class RequestControllerTest {
                 .build();
 
         mockMvc.perform(post("/requests")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest());
@@ -69,14 +68,14 @@ class RequestControllerTest {
                 .thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
         mockMvc.perform(get("/requests/all")
-                        .header(USER_ID_HEADER, 1L))
+                        .header(Constants.USER_ID_HEADER, 1L))
                 .andExpect(status().isOk());
     }
 
     @Test
     void findAllRequests_WhenNegativeFrom_ReturnsBadRequest() throws Exception {
         mockMvc.perform(get("/requests/all")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .param("from", "-1"))
                 .andExpect(status().isBadRequest());
     }
@@ -84,7 +83,7 @@ class RequestControllerTest {
     @Test
     void findAllRequests_WhenZeroSize_ReturnsBadRequest() throws Exception {
         mockMvc.perform(get("/requests/all")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .param("size", "0"))
                 .andExpect(status().isBadRequest());
     }
@@ -95,7 +94,7 @@ class RequestControllerTest {
                 .thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
         mockMvc.perform(get("/requests/5")
-                        .header(USER_ID_HEADER, 1L))
+                        .header(Constants.USER_ID_HEADER, 1L))
                 .andExpect(status().isOk());
     }
 }

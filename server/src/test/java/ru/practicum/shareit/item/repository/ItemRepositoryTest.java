@@ -32,26 +32,22 @@ class ItemRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        // Создаем и сохраняем владельца вещи
         owner = new User();
         owner.setName("Владелец");
         owner.setEmail("owner@mail.com");
         em.persist(owner);
 
-        // Создаем и сохраняем автора запроса на вещь
         requester = new User();
         requester.setName("Заказчик");
         requester.setEmail("request@mail.com");
         em.persist(requester);
 
-        // Создаем и сохраняем запрос на вещь
         request = new Request();
         request.setDescription("Нужна дрель");
         request.setRequestor(requester);
         request.setCreated(LocalDateTime.now());
         em.persist(request);
 
-        // Создаем и сохраняем саму вещь
         item = new Item();
         item.setName("Дрель ударная");
         item.setDescription("Мощная дрель для бетона");

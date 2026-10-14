@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.request.dto.RequestCreateDto;
 import ru.practicum.shareit.request.dto.RequestResponseDto;
 import ru.practicum.shareit.request.service.RequestService;
+import ru.practicum.shareit.util.Constants;
 
 import java.util.List;
 
@@ -33,8 +34,6 @@ class RequestControllerTest {
     @MockBean
     private RequestService requestService;
 
-    private static final String USER_ID_HEADER = "X-Sharer-User-Id";
-
     @Test
     void createRequest_ShouldReturnRequestAndStatus200() throws Exception {
         RequestCreateDto createDto = RequestCreateDto.builder()
@@ -50,7 +49,7 @@ class RequestControllerTest {
                 .thenReturn(responseDto);
 
         mockMvc.perform(post("/requests")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createDto)))
                 .andExpect(status().isOk())
@@ -71,7 +70,7 @@ class RequestControllerTest {
         when(requestService.findRequestsByUser(1L)).thenReturn(List.of(responseDto));
 
         mockMvc.perform(get("/requests")
-                        .header(USER_ID_HEADER, 1L))
+                        .header(Constants.USER_ID_HEADER, 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].description").value("Нужен перфоратор"));
@@ -81,7 +80,6 @@ class RequestControllerTest {
 
     @Test
     void findAllRequests_ShouldReturnListWithParams() throws Exception {
-        // Given
         RequestResponseDto responseDto = RequestResponseDto.builder()
                 .id(2L)
                 .description("Ищу газонокосилку")
@@ -90,7 +88,7 @@ class RequestControllerTest {
         when(requestService.findAllRequests(1L, 0, 10)).thenReturn(List.of(responseDto));
 
         mockMvc.perform(get("/requests/all")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .param("from", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk())
@@ -110,7 +108,7 @@ class RequestControllerTest {
         when(requestService.findRequestById(5L)).thenReturn(responseDto);
 
         mockMvc.perform(get("/requests/5")
-                        .header(USER_ID_HEADER, 1L))
+                        .header(Constants.USER_ID_HEADER, 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(5))
                 .andExpect(jsonPath("$.description").value("Запрос на дрель"));

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.client.MockRestServiceServer;
 import ru.practicum.shareit.booking.dto.BookingCreateDto;
 import ru.practicum.shareit.booking.dto.State;
+import ru.practicum.shareit.util.Constants;
 
 import java.time.LocalDateTime;
 
@@ -49,7 +50,7 @@ class BookingClientTest {
 
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/bookings")))
                 .andExpect(method(HttpMethod.POST))
-                .andExpect(header("X-Sharer-User-Id", "1"))
+                .andExpect(header(Constants.USER_ID_HEADER, "1"))
                 .andExpect(content().json(jsonBody))
                 .andRespond(withStatus(HttpStatus.CREATED).body("{\"id\":1}").contentType(MediaType.APPLICATION_JSON));
 
@@ -63,7 +64,7 @@ class BookingClientTest {
     void findBookingById_shouldSendGetRequest_withUserHeader() {
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/bookings/10")))
                 .andExpect(method(HttpMethod.GET))
-                .andExpect(header("X-Sharer-User-Id", "2"))
+                .andExpect(header(Constants.USER_ID_HEADER, "2"))
                 .andRespond(withSuccess("{\"id\":10}", MediaType.APPLICATION_JSON));
 
         ResponseEntity<Object> response = bookingClient.findBookingById(2L, 10L);
@@ -76,7 +77,7 @@ class BookingClientTest {
     void approveBooking_shouldSendPatchRequest_withQueryParam_andNoBody() {
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/bookings/10?approved=true")))
                 .andExpect(method(HttpMethod.PATCH))
-                .andExpect(header("X-Sharer-User-Id", "1"))
+                .andExpect(header(Constants.USER_ID_HEADER, "1"))
                 .andExpect(content().string("")) // Проверяем, что тело запроса пустое (null)
                 .andRespond(withSuccess("{\"id\":10,\"status\":\"APPROVED\"}", MediaType.APPLICATION_JSON));
 
@@ -91,7 +92,7 @@ class BookingClientTest {
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString(
                 "/bookings?state=FUTURE&from=0&size=10")))
                 .andExpect(method(HttpMethod.GET))
-                .andExpect(header("X-Sharer-User-Id", "5"))
+                .andExpect(header(Constants.USER_ID_HEADER, "5"))
                 .andRespond(withSuccess("[]", MediaType.APPLICATION_JSON));
 
         ResponseEntity<Object> response = bookingClient.findBookingsByUser(5L, State.FUTURE, 0, 10);
@@ -105,7 +106,7 @@ class BookingClientTest {
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString(
                 "/bookings/owner?state=ALL&from=5&size=5")))
                 .andExpect(method(HttpMethod.GET))
-                .andExpect(header("X-Sharer-User-Id", "3"))
+                .andExpect(header(Constants.USER_ID_HEADER, "3"))
                 .andRespond(withSuccess("[]", MediaType.APPLICATION_JSON));
 
         ResponseEntity<Object> response = bookingClient.findBookingsByOwner(3L, State.ALL, 5, 5);

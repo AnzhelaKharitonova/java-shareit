@@ -13,6 +13,7 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
+import ru.practicum.shareit.util.Constants;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
@@ -48,7 +49,7 @@ class ItemClientTest {
 
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/items")))
                 .andExpect(method(HttpMethod.POST))
-                .andExpect(header("X-Sharer-User-Id", "1"))
+                .andExpect(header(Constants.USER_ID_HEADER, "1"))
                 .andExpect(content().json(jsonBody))
                 .andRespond(withStatus(HttpStatus.CREATED).body("{\"id\":1}").contentType(MediaType.APPLICATION_JSON));
 
@@ -64,7 +65,7 @@ class ItemClientTest {
 
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/items/1")))
                 .andExpect(method(HttpMethod.PATCH))
-                .andExpect(header("X-Sharer-User-Id", "2"))
+                .andExpect(header(Constants.USER_ID_HEADER, "2"))
                 .andExpect(content().json(jsonBody))
                 .andRespond(withSuccess("{\"id\":1}", MediaType.APPLICATION_JSON));
 
@@ -78,7 +79,7 @@ class ItemClientTest {
     void findItemById_shouldSendGetRequest_withoutUserHeader() {
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/items/5")))
                 .andExpect(method(HttpMethod.GET))
-                .andExpect(headerDoesNotExist("X-Sharer-User-Id"))
+                .andExpect(headerDoesNotExist(Constants.USER_ID_HEADER))
                 .andRespond(withSuccess("{\"id\":5}", MediaType.APPLICATION_JSON));
 
         ResponseEntity<Object> response = itemClient.findItemById(5L);
@@ -91,7 +92,7 @@ class ItemClientTest {
     void findItemsByOwner_shouldSendGetRequest_withUserHeader() {
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/items")))
                 .andExpect(method(HttpMethod.GET))
-                .andExpect(header("X-Sharer-User-Id", "10"))
+                .andExpect(header(Constants.USER_ID_HEADER, "10"))
                 .andRespond(withSuccess("[]", MediaType.APPLICATION_JSON));
 
         ResponseEntity<Object> response = itemClient.findItemsByOwner(10L);
@@ -119,7 +120,7 @@ class ItemClientTest {
 
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/items/1/comment")))
                 .andExpect(method(HttpMethod.POST))
-                .andExpect(header("X-Sharer-User-Id", "3"))
+                .andExpect(header(Constants.USER_ID_HEADER, "3"))
                 .andExpect(content().json(jsonBody))
                 .andRespond(withSuccess("{\"id\":1}", MediaType.APPLICATION_JSON));
 

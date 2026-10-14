@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
+import ru.practicum.shareit.util.Constants;
 
 import java.util.Map;
 
@@ -43,7 +44,7 @@ class BaseClientTest {
 
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/items/1")))
                 .andExpect(method(HttpMethod.GET))
-                .andExpect(header("X-Sharer-User-Id", "42"))
+                .andExpect(header(Constants.USER_ID_HEADER, "42"))
                 .andRespond(withSuccess());
 
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/items/search")))
@@ -71,7 +72,7 @@ class BaseClientTest {
 
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/items")))
                 .andExpect(method(HttpMethod.POST))
-                .andExpect(header("X-Sharer-User-Id", "10"))
+                .andExpect(header(Constants.USER_ID_HEADER, "10"))
                 .andExpect(content().string("body"))
                 .andRespond(withSuccess());
 
@@ -88,12 +89,12 @@ class BaseClientTest {
     void testPutMethods() {
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/items/1")))
                 .andExpect(method(HttpMethod.PUT))
-                .andExpect(header("X-Sharer-User-Id", "1"))
+                .andExpect(header(Constants.USER_ID_HEADER, "1"))
                 .andRespond(withSuccess());
 
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/items/1")))
                 .andExpect(method(HttpMethod.PUT))
-                .andExpect(header("X-Sharer-User-Id", "1"))
+                .andExpect(header(Constants.USER_ID_HEADER, "1"))
                 .andRespond(withSuccess());
 
         ResponseEntity<Object> response1 = testClient.put("/items/1", 1L, "update");
@@ -113,12 +114,12 @@ class BaseClientTest {
 
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/users/2")))
                 .andExpect(method(HttpMethod.PATCH))
-                .andExpect(header("X-Sharer-User-Id", "2"))
+                .andExpect(header(Constants.USER_ID_HEADER, "2"))
                 .andRespond(withSuccess());
 
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/users/3")))
                 .andExpect(method(HttpMethod.PATCH))
-                .andExpect(header("X-Sharer-User-Id", "3"))
+                .andExpect(header(Constants.USER_ID_HEADER, "3"))
                 .andRespond(withSuccess());
 
         ResponseEntity<Object> response1 = testClient.patch("/users", "body");
@@ -141,7 +142,7 @@ class BaseClientTest {
 
         mockServer.expect(requestTo(org.hamcrest.CoreMatchers.containsString("/items/1")))
                 .andExpect(method(HttpMethod.DELETE))
-                .andExpect(header("X-Sharer-User-Id", "5"))
+                .andExpect(header(Constants.USER_ID_HEADER, "5"))
                 .andRespond(withSuccess());
 
         ResponseEntity<Object> response1 = testClient.delete("/clear");

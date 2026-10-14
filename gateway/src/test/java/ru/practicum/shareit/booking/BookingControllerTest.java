@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingCreateDto;
+import ru.practicum.shareit.util.Constants;
 
 import java.time.LocalDateTime;
 
@@ -31,8 +32,6 @@ class BookingControllerTest {
     @MockBean
     private BookingClient bookingClient;
 
-    private static final String USER_ID_HEADER = "X-Sharer-User-Id";
-
     @Test
     void createBooking_WhenValid_ReturnsOk() throws Exception {
         BookingCreateDto validDto = BookingCreateDto.builder()
@@ -45,7 +44,7 @@ class BookingControllerTest {
                 .thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
         mockMvc.perform(post("/bookings")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validDto)))
                 .andExpect(status().isOk());
@@ -60,7 +59,7 @@ class BookingControllerTest {
                 .build();
 
         mockMvc.perform(post("/bookings")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest());
@@ -77,7 +76,7 @@ class BookingControllerTest {
                 .build();
 
         mockMvc.perform(post("/bookings")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest());
@@ -87,9 +86,8 @@ class BookingControllerTest {
 
     @Test
     void approveBooking_WhenMissingApprovedParam_ReturnsBadRequest() throws Exception {
-        // When & Then: параметр approved отсутствует (@NotNull)
         mockMvc.perform(patch("/bookings/1")
-                        .header(USER_ID_HEADER, 1L))
+                        .header(Constants.USER_ID_HEADER, 1L))
                 .andExpect(status().isBadRequest());
 
         verifyNoInteractions(bookingClient);
@@ -98,7 +96,7 @@ class BookingControllerTest {
     @Test
     void findBookingsByUser_WhenUnknownState_ReturnsBadRequest() throws Exception {
         mockMvc.perform(get("/bookings")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .param("state", "UNSUPPORTED_STATE"))
                 .andExpect(status().isBadRequest());
 
@@ -108,7 +106,7 @@ class BookingControllerTest {
     @Test
     void findBookingsByUser_WhenNegativeFrom_ReturnsBadRequest() throws Exception {
         mockMvc.perform(get("/bookings")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .param("from", "-1"))
                 .andExpect(status().isBadRequest());
     }
@@ -116,7 +114,7 @@ class BookingControllerTest {
     @Test
     void findBookingsByUser_WhenZeroSize_ReturnsBadRequest() throws Exception {
         mockMvc.perform(get("/bookings")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .param("size", "0"))
                 .andExpect(status().isBadRequest());
     }
@@ -127,14 +125,14 @@ class BookingControllerTest {
                 .thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
         mockMvc.perform(get("/bookings/owner")
-                        .header(USER_ID_HEADER, 1L))
+                        .header(Constants.USER_ID_HEADER, 1L))
                 .andExpect(status().isOk());
     }
 
     @Test
     void findBookingsByOwner_WhenNegativeSize_ReturnsBadRequest() throws Exception {
         mockMvc.perform(get("/bookings/owner")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .param("size", "-5"))
                 .andExpect(status().isBadRequest());
     }

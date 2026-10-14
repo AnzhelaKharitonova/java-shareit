@@ -11,6 +11,7 @@ import ru.practicum.shareit.booking.dto.BookingCreateDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.dto.State;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.util.Constants;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,11 +35,8 @@ class BookingControllerTest {
     @MockBean
     private BookingService bookingService;
 
-    private static final String USER_ID_HEADER = "X-Sharer-User-Id";
-
     @Test
     void createBooking_ShouldReturnBookingAndStatus200() throws Exception {
-        // Given
         BookingCreateDto createDto = BookingCreateDto.builder()
                 .itemId(1L)
                 .start(LocalDateTime.now().plusDays(1))
@@ -53,7 +51,7 @@ class BookingControllerTest {
                 .thenReturn(responseDto);
 
         mockMvc.perform(post("/bookings")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createDto)))
                 .andExpect(status().isOk())
@@ -72,7 +70,7 @@ class BookingControllerTest {
                 .thenReturn(responseDto);
 
         mockMvc.perform(patch("/bookings/10")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .param("approved", "true"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(10));
@@ -90,7 +88,7 @@ class BookingControllerTest {
                 .thenReturn(responseDto);
 
         mockMvc.perform(get("/bookings/10")
-                        .header(USER_ID_HEADER, 1L))
+                        .header(Constants.USER_ID_HEADER, 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(10));
 
@@ -104,7 +102,7 @@ class BookingControllerTest {
                 .thenReturn(List.of(responseDto));
 
         mockMvc.perform(get("/bookings")
-                        .header(USER_ID_HEADER, 1L)
+                        .header(Constants.USER_ID_HEADER, 1L)
                         .param("state", "ALL")
                         .param("from", "0")
                         .param("size", "10"))
@@ -121,7 +119,7 @@ class BookingControllerTest {
                 .thenReturn(List.of(responseDto));
 
         mockMvc.perform(get("/bookings/owner")
-                        .header(USER_ID_HEADER, 1L))
+                        .header(Constants.USER_ID_HEADER, 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(20));
 

@@ -41,7 +41,7 @@ class RequestRepositoryTest {
 
         request1 = new Request();
         request1.setDescription("Нужна стремянка");
-        request1.setRequestor(requestor1); // Проверь имя сеттера в своей модели (setRequestor или setRequestorId)
+        request1.setRequestor(requestor1);
         request1.setCreated(LocalDateTime.now().minusDays(1));
         em.persist(request1);
 

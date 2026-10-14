@@ -88,7 +88,6 @@ class BookingRepositoryTest {
 
     @Test
     void findByBookerIdAndEndBefore_ShouldReturnPastBooking() {
-        // Given
         LocalDateTime now = LocalDateTime.now();
         Pageable pageable = PageRequest.of(0, 10, Sort.by("start").ascending());
 
